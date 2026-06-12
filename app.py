@@ -1,27 +1,37 @@
+# ==============================
+# IMPORTS
+# ==============================
 from flask import Flask, render_template, request, redirect, session, flash
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
-import os
+from dotenv import load_dotenv
 import pdfplumber
+import os
+
+# ==============================
+# LOAD ENV VARIABLES
+# ==============================
+load_dotenv()
 
 app = Flask(__name__)
 
 # ==============================
 # SECRET KEY
 # ==============================
-app.secret_key = "f334c46eada7c82d797aad8227e708b1"
-
+app.secret_key = os.getenv("SECRET_KEY")
 
 # ==============================
 # MYSQL CONFIGURATION
 # ==============================
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'DheenaGopinath@2114'
-app.config['MYSQL_DB'] = 'ai_resume_analyzer'
+app.config['MYSQL_HOST'] = os.getenv("MYSQL_HOST")
+app.config['MYSQL_USER'] = os.getenv("MYSQL_USER")
+app.config['MYSQL_PASSWORD'] = os.getenv("MYSQL_PASSWORD")
+app.config['MYSQL_DB'] = os.getenv("MYSQL_DB")
+app.config['MYSQL_PORT'] = int(os.getenv("MYSQL_PORT"))
 
 mysql = MySQL(app)
+
 
 
 # ==============================
