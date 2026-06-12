@@ -1,0 +1,98 @@
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    min-height:100vh;
+    color:white;
+}
+
+.glass-card{
+    background: rgba(255,255,255,0.08);
+    border-radius:20px;
+    backdrop-filter: blur(15px);
+    border:1px solid rgba(255,255,255,0.1);
+    box-shadow:0 8px 32px rgba(0,0,0,0.3);
+}
+
+.sidebar{
+    width:260px;
+    height:100vh;
+    position:fixed;
+    left:0;
+    top:0;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    padding:30px;
+}
+
+.sidebar h2{
+    color:#38bdf8;
+    font-weight:700;
+}
+
+.sidebar a{
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:12px;
+    margin-top:10px;
+    border-radius:10px;
+    transition:0.3s;
+}
+
+.sidebar a:hover{
+    background:#38bdf8;
+    transform:translateX(5px);
+}
+
+.main-content{
+    margin-left:280px;
+    padding:40px;
+}
+
+.stat-card{
+    padding:25px;
+    border-radius:20px;
+    transition:0.3s;
+}
+
+.stat-card:hover{
+    transform:translateY(-5px);
+}
+
+.resume-score{
+    font-size:60px;
+    font-weight:700;
+    color:#38bdf8;
+}
+
+.skill-badge{
+    background:#38bdf8;
+    color:white;
+    padding:10px 15px;
+    border-radius:30px;
+    display:inline-block;
+    margin:5px;
+}
+
+.btn-premium{
+    background:#38bdf8;
+    border:none;
+    padding:12px 20px;
+    border-radius:12px;
+    color:white;
+    font-weight:600;
+    transition:0.3s;
+}
+
+.btn-premium:hover{
+    background:#0ea5e9;
+    transform:scale(1.03);
+}
+

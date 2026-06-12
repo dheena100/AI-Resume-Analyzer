@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Resume Analyzer</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css"
+          rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            background: linear-gradient(135deg,#0f172a,#1e293b);
+            color:white;
+            overflow-x:hidden;
+        }
+
+        .navbar{
+            padding:20px 50px;
+        }
+
+        .navbar-brand{
+            color:#38bdf8 !important;
+            font-size:28px;
+            font-weight:700;
+        }
+
+        .hero{
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            padding:40px;
+        }
+
+        .hero h1{
+            font-size:60px;
+            font-weight:700;
+            line-height:1.3;
+        }
+
+        .hero p{
+            margin-top:20px;
+            font-size:20px;
+            color:#cbd5e1;
+        }
+
+        .highlight{
+            color:#38bdf8;
+        }
+
+        .btn-premium{
+            background:#38bdf8;
+            border:none;
+            padding:14px 28px;
+            border-radius:14px;
+            color:white;
+            font-weight:600;
+            text-decoration:none;
+            margin:10px;
+            display:inline-block;
+            transition:0.3s;
+        }
+
+        .btn-premium:hover{
+            background:#0ea5e9;
+            transform:translateY(-3px);
+            color:white;
+        }
+
+        .glass-card{
+            background: rgba(255,255,255,0.08);
+            border-radius:25px;
+            backdrop-filter: blur(20px);
+            border:1px solid rgba(255,255,255,0.1);
+            box-shadow:0 8px 32px rgba(0,0,0,0.3);
+            padding:30px;
+            transition:0.3s;
+            height:100%;
+        }
+
+        .glass-card:hover{
+            transform:translateY(-8px);
+        }
+
+        .feature-icon{
+            font-size:50px;
+            color:#38bdf8;
+            margin-bottom:20px;
+        }
+
+        .section-title{
+            text-align:center;
+            margin-bottom:60px;
+        }
+
+        .section-title h2{
+            font-size:45px;
+            font-weight:700;
+        }
+
+        .section-title p{
+            color:#cbd5e1;
+        }
+
+        .features-section{
+            padding:100px 0;
+        }
+
+        .footer{
+            text-align:center;
+            padding:30px;
+            color:#94a3b8;
+        }
+
+        @media(max-width:768px){
+
+            .hero h1{
+                font-size:40px;
+            }
+
+            .hero p{
+                font-size:18px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+
+    <div class="container-fluid">
+
+        <a class="navbar-brand">
+            AI Resume Analyzer
+        </a>
+
+    </div>
+
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero">
+
+    <div class="container">
+
+        <h1 data-aos="fade-up">
+
+            Analyze Your Resume With
+
+            <span class="highlight">
+                Artificial Intelligence
+            </span>
+
+        </h1>
+
+        <p data-aos="fade-up"
+           data-aos-delay="200">
+
+            AI-powered resume scoring, skill analysis,
+            and intelligent job matching platform.
+
+        </p>
+
+        <div class="mt-5"
+             data-aos="fade-up"
+             data-aos-delay="400">
+
+            <a href="/register"
+               class="btn-premium">
+
+                Get Started
+
+            </a>
+
+            <a href="/login"
+               class="btn-premium">
+
+                Login
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FEATURES -->
+<section class="features-section">
+
+    <div class="container">
+
+        <div class="section-title">
+
+            <h2>
+                Premium Features
+            </h2>
+
+            <p>
+                Smart AI features for modern resume analysis
+            </p>
+
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+
+                <div class="glass-card"
+                     data-aos="zoom-in">
+
+                    <div class="feature-icon">
+
+                        <i class="bi bi-file-earmark-text"></i>
+
+                    </div>
+
+                    <h4>
+                        Resume Analysis
+                    </h4>
+
+                    <p class="mt-3">
+
+                        Extract skills and analyze resumes
+                        using AI-powered processing.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="glass-card"
+                     data-aos="zoom-in"
+                     data-aos-delay="200">
+
+                    <div class="feature-icon">
+
+                        <i class="bi bi-bar-chart"></i>
+
+                    </div>
+
+                    <h4>
+                        ATS Score
+                    </h4>
+
+                    <p class="mt-3">
+
+                        Get resume scores and detailed
+                        analytics instantly.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <div class="glass-card"
+                     data-aos="zoom-in"
+                     data-aos-delay="400">
+
+                    <div class="feature-icon">
+
+                        <i class="bi bi-briefcase"></i>
+
+                    </div>
+
+                    <h4>
+                        Job Matching
+                    </h4>
+
+                    <p class="mt-3">
+
+                        Match resumes with suitable jobs
+                        automatically.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- CTA SECTION -->
+<section class="py-5">
+
+    <div class="container">
+
+        <div class="glass-card text-center p-5">
+
+            <h2>
+                Ready to Build Your Career?
+            </h2>
+
+            <p class="mt-3">
+
+                Upload your resume and get AI insights instantly.
+
+            </p>
+
+            <a href="/register"
+               class="btn-premium mt-4">
+
+                Start Now
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FOOTER -->
+<div class="footer">
+
+    © 2026 AI Resume Analyzer | Built with Flask & AI
+
+</div>
+
+<!-- AOS SCRIPT -->
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+<script>
+
+    AOS.init({
+        duration:1000
+    });
+
+</script>
+
+</body>
+</html>
+
