@@ -1,64 +1,77 @@
+
 # ==============================
 # IMPORTS
 # ==============================
-from flask import Flask, render_template, request, redirect, session, flash
-import pymysql
-pymysql.install_as_MySQLdb()
 
-from flask_mysqldb import MySQL
+from flask import Flask, render_template, request, redirect, session, flash
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 
+import pymysql
 import pdfplumber
 import os
+
+
 # ==============================
 # LOAD ENV VARIABLES
 # ==============================
+
 load_dotenv()
 
 app = Flask(__name__)
 
+
 # ==============================
 # SECRET KEY
 # ==============================
+
 app.secret_key = os.getenv("SECRET_KEY")
 
-# ==============================
-# MYSQL CONFIGURATION
-# ==============================
-app.config['MYSQL_HOST'] = os.getenv("MYSQL_HOST")
-app.config['MYSQL_USER'] = os.getenv("MYSQL_USER")
-app.config['MYSQL_PASSWORD'] = os.getenv("MYSQL_PASSWORD")
-app.config['MYSQL_DB'] = os.getenv("MYSQL_DB")
-app.config['MYSQL_PORT'] = int(os.getenv("MYSQL_PORT"))
-
-mysql = MySQL(app)
-
-
 
 # ==============================
-# UPLOAD FOLDER CONFIGURATION
+# MYSQL CONNECTION
 # ==============================
+
+def get_db_connection():
+
+    connection = pymysql.connect(
+        host=os.getenv("MYSQL_HOST"),
+        user=os.getenv("MYSQL_USER"),
+        password=os.getenv("MYSQL_PASSWORD"),
+        database=os.getenv("MYSQL_DB"),
+        port=int(os.getenv("MYSQL_PORT")),
+        cursorclass=pymysql.cursors.Cursor
+    )
+
+    return connection
+
+
+# ==============================
+# UPLOAD FOLDER
+# ==============================
+
 UPLOAD_FOLDER = 'static/uploads'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Create upload folder automatically if not exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
 # ==============================
-# HOME PAGE
+# HOME
 # ==============================
+
 @app.route('/')
 def home():
+
     return render_template('index.html')
 
 
 # ==============================
 # REGISTER
 # ==============================
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 
@@ -68,12 +81,11 @@ def register():
         email = request.form['email']
         password = request.form['password']
 
-        # HASH PASSWORD
         hashed_password = generate_password_hash(password)
 
-        cur = mysql.connection.cursor()
+        connection = get_db_connection()
+        cur = connection.cursor()
 
-        # Check email already exists
         cur.execute(
             "SELECT * FROM users WHERE email = %s",
             (email,)
@@ -82,17 +94,23 @@ def register():
         existing_user = cur.fetchone()
 
         if existing_user:
+
+            cur.close()
+            connection.close()
+
             flash("Email already exists!")
+
             return redirect('/register')
 
-        # Insert user
         cur.execute(
             "INSERT INTO users(name, email, password) VALUES(%s, %s, %s)",
             (name, email, hashed_password)
         )
 
-        mysql.connection.commit()
+        connection.commit()
+
         cur.close()
+        connection.close()
 
         flash("Registration Successful!")
 
@@ -104,6 +122,7 @@ def register():
 # ==============================
 # LOGIN
 # ==============================
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 
@@ -112,9 +131,9 @@ def login():
         email = request.form['email']
         password = request.form['password']
 
-        cur = mysql.connection.cursor()
+        connection = get_db_connection()
+        cur = connection.cursor()
 
-        # Get user by email
         cur.execute(
             "SELECT * FROM users WHERE email = %s",
             (email,)
@@ -123,8 +142,8 @@ def login():
         user = cur.fetchone()
 
         cur.close()
+        connection.close()
 
-        # VERIFY PASSWORD
         if user and check_password_hash(user[3], password):
 
             session['loggedin'] = True
@@ -136,6 +155,7 @@ def login():
             return redirect('/dashboard')
 
         else:
+
             flash("Invalid Email or Password")
 
     return render_template('login.html')
@@ -144,10 +164,12 @@ def login():
 # ==============================
 # DASHBOARD
 # ==============================
+
 @app.route('/dashboard')
 def dashboard():
 
     if 'loggedin' in session:
+
         return render_template(
             'dashboard.html',
             name=session['name']
@@ -159,6 +181,7 @@ def dashboard():
 # ==============================
 # LOGOUT
 # ==============================
+
 @app.route('/logout')
 def logout():
 
@@ -170,12 +193,14 @@ def logout():
 
 
 # ==============================
-# RESUME UPLOAD
+# UPLOAD RESUME
 # ==============================
+
 @app.route('/upload_resume', methods=['GET', 'POST'])
 def upload_resume():
 
     if 'loggedin' not in session:
+
         return redirect('/login')
 
     if request.method == 'POST':
@@ -183,7 +208,9 @@ def upload_resume():
         file = request.files['resume']
 
         if file.filename == '':
+
             flash("Please select a file")
+
             return redirect('/upload_resume')
 
         filename = secure_filename(file.filename)
@@ -195,23 +222,18 @@ def upload_resume():
 
         file.save(filepath)
 
-        # Extract text from PDF
         extracted_text = extract_text(filepath)
 
-        # Extract skills
         extracted_skills = extract_skills(extracted_text)
 
-        # Resume score
         resume_score = len(extracted_skills) * 10
 
-        # Match jobs
         matched_jobs = match_jobs(extracted_skills)
 
-        # Convert skills list to string
         skills_string = ", ".join(extracted_skills)
 
-        # Save to database
-        cur = mysql.connection.cursor()
+        connection = get_db_connection()
+        cur = connection.cursor()
 
         cur.execute(
             """
@@ -227,8 +249,10 @@ def upload_resume():
             )
         )
 
-        mysql.connection.commit()
+        connection.commit()
+
         cur.close()
+        connection.close()
 
         return render_template(
             'result.html',
@@ -243,6 +267,7 @@ def upload_resume():
 # ==============================
 # PDF TEXT EXTRACTION
 # ==============================
+
 def extract_text(pdf_path):
 
     text = ""
@@ -254,6 +279,7 @@ def extract_text(pdf_path):
             page_text = page.extract_text()
 
             if page_text:
+
                 text += page_text
 
     return text
@@ -262,6 +288,7 @@ def extract_text(pdf_path):
 # ==============================
 # SKILL EXTRACTION
 # ==============================
+
 def extract_skills(text):
 
     skills_list = [
@@ -285,20 +312,27 @@ def extract_skills(text):
     for skill in skills_list:
 
         if skill.lower() in text.lower():
+
             found_skills.append(skill)
 
     return found_skills
 
 
+# ==============================
+# JOB MATCHING
+# ==============================
+
 def match_jobs(user_skills):
 
-    cur = mysql.connection.cursor()
+    connection = get_db_connection()
+    cur = connection.cursor()
 
     cur.execute("SELECT * FROM jobs")
 
     jobs = cur.fetchall()
 
     cur.close()
+    connection.close()
 
     matched_jobs = []
 
@@ -313,6 +347,7 @@ def match_jobs(user_skills):
             for js in job_skills:
 
                 if skill.lower().strip() == js.lower().strip():
+
                     match_count += 1
 
         if match_count > 0:
@@ -325,16 +360,20 @@ def match_jobs(user_skills):
 
     return matched_jobs
 
+
 # ==============================
 # RESUME HISTORY
 # ==============================
+
 @app.route('/resume_history')
 def resume_history():
 
     if 'loggedin' not in session:
+
         return redirect('/login')
 
-    cur = mysql.connection.cursor()
+    connection = get_db_connection()
+    cur = connection.cursor()
 
     cur.execute(
         """
@@ -351,6 +390,7 @@ def resume_history():
     resumes = cur.fetchall()
 
     cur.close()
+    connection.close()
 
     return render_template(
         'resume_history.html',
@@ -361,5 +401,8 @@ def resume_history():
 # ==============================
 # MAIN
 # ==============================
+
 if __name__ == '__main__':
+
     app.run(debug=True)
+
