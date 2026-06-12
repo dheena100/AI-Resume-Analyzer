@@ -2,13 +2,16 @@
 # IMPORTS
 # ==============================
 from flask import Flask, render_template, request, redirect, session, flash
+import pymysql
+pymysql.install_as_MySQLdb()
+
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
+
 import pdfplumber
 import os
-
 # ==============================
 # LOAD ENV VARIABLES
 # ==============================
